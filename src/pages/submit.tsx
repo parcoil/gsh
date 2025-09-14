@@ -8,7 +8,9 @@ function Submit() {
   const [siteUrl, setSiteUrl] = useState('')
   const [siteImage, setSiteImage] = useState('')
   const [siteDescription, setSiteDescription] = useState('')
+  const [discordUrl, setDiscordUrl] = useState('')
   const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
     async function checkUser() {
@@ -18,11 +20,14 @@ function Submit() {
 
       if (!user) {
         navigate('/login')
+      } else {
+        setUser(user)
+        console.log(user)
       }
     }
 
     checkUser()
-  }, [navigate])
+  }, [navigate, user])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -34,6 +39,7 @@ function Submit() {
         site_url: siteUrl,
         site_image: siteImage,
         site_description: siteDescription,
+        discord_url: discordUrl,
       },
     ])
 
@@ -48,6 +54,8 @@ function Submit() {
   }
 
   return (
+    <div>
+        {/* <h1 className='text-3xl font-bold text-center'>Hi, {user?.user_metadata.name}</h1>  */}
     <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-800 text-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-6">Submit a Site</h1>
 
@@ -95,6 +103,15 @@ function Submit() {
           />
         </div>
 
+        <div>
+          <label className="block mb-1">Discord URL</label>
+          <input
+            type="url"
+            value={discordUrl}
+            onChange={(e) => setDiscordUrl(e.target.value)}
+            className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
         <button
           type="submit"
           disabled={loading}
@@ -107,6 +124,7 @@ function Submit() {
         You will need to wait for an admin to approve your site.
         If you need help, join our discord: <a href="https://dsc.gg/parcoil" className="text-blue-400">https://dsc.gg/parcoil</a>
       </p>
+    </div>
     </div>
   )
 }
