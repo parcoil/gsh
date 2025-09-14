@@ -63,7 +63,7 @@ function Home() {
             <p className="text-gray-400 mt-2 text-sm">
               Added: {new Date(site.created_at).toLocaleDateString()}
             </p>
-            <button className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition">
+            <button className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition" onClick={() => window.open(site.site_url)}>
               Visit
             </button>
           </div>
