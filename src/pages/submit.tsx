@@ -124,6 +124,7 @@ function Submit() {
         You will need to wait for an admin to approve your site.
         If you need help, join our discord: <a href="https://dsc.gg/parcoil" className="text-blue-400">https://dsc.gg/parcoil</a>
       </p>
+      <p className="mt-4 text-sm text-gray-300">you can also request a site to be added in our discord server. <span className='text-blue-500'>if you would like to update a site create a ticket in our discord server</span></p>
     </div>
     </div>
   )
