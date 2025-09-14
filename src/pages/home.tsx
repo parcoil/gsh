@@ -11,6 +11,7 @@ type Site = {
 
 function Home() {
   const [sites, setSites] = useState<Site[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function getSites() {
@@ -26,22 +27,29 @@ function Home() {
     getSites();
   }, []);
 
+  const filteredSites = sites.filter((site) =>
+    site.site_name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="m-4 flex flex-col items-center">
       <img src="/logo512.png" alt="" width={100} />
       <h1 className="text-4xl font-bold mb-8 text-center">Game Sites Hub</h1>
+
       <input
         type="text"
         placeholder="Search for a game site"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         className="w-full max-w-md px-4 py-2 text-gray-200 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 placeholder-gray-500 mb-5"
       />
 
-      {sites.length === 0 && (
-        <p className="text-center text-gray-400">No sites available yet.</p>
+      {filteredSites.length === 0 && (
+        <p className="text-center text-gray-400">No sites available.</p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {sites.map((site) => (
+        {filteredSites.map((site) => (
           <div
             key={site.id}
             className="bg-gray-800 p-6 rounded-xl shadow-lg hover:scale-105 transform transition duration-300"
@@ -63,7 +71,10 @@ function Home() {
             <p className="text-gray-400 mt-2 text-sm">
               Added: {new Date(site.created_at).toLocaleDateString()}
             </p>
-            <button className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition" onClick={() => window.open(site.site_url)}>
+            <button
+              className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition"
+              onClick={() => window.open(site.site_url)}
+            >
               Visit
             </button>
           </div>
