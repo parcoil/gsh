@@ -7,6 +7,7 @@ function Submit() {
   const [siteName, setSiteName] = useState('')
   const [siteUrl, setSiteUrl] = useState('')
   const [siteImage, setSiteImage] = useState('')
+  const [siteDescription, setSiteDescription] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -32,6 +33,7 @@ function Submit() {
         site_name: siteName,
         site_url: siteUrl,
         site_image: siteImage,
+        site_description: siteDescription,
       },
     ])
 
@@ -79,6 +81,17 @@ function Submit() {
             value={siteImage}
             onChange={(e) => setSiteImage(e.target.value)}
             className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label className="block mb-1">Site Description</label>
+          <textarea
+            value={siteDescription}
+            onChange={(e) => setSiteDescription(e.target.value)}
+            rows={3}
+            className="w-full p-2 rounded bg-gray-800 border border-gray-700 focus:border-blue-500 focus:outline-none"
+            placeholder="A short description of the site"
           />
         </div>
 

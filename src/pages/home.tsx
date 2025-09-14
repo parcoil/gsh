@@ -7,6 +7,7 @@ type Site = {
   site_name: string;
   site_url: string;
   site_image: string;
+  site_description: string;
 };
 
 function Home() {
@@ -17,7 +18,9 @@ function Home() {
     async function getSites() {
       const { data: sites, error } = await supabase
         .from("sites")
-        .select("id, created_at, site_name, site_url, site_image")
+        .select(
+          "id, created_at, site_name, site_url, site_image, site_description"
+        )
         .eq("approved", true);
 
       if (error) console.error(error);
@@ -52,31 +55,40 @@ function Home() {
         {filteredSites.map((site) => (
           <div
             key={site.id}
-            className="bg-gray-800 p-6 rounded-xl shadow-lg hover:scale-105 transform transition duration-300"
+            className="bg-gray-800 p-6 rounded-xl shadow-lg hover:scale-105 transform transition duration-300 flex flex-col justify-between max-w-5xl"
           >
-            <img
-              src={site.site_image}
-              alt={site.site_name}
-              className="w-full h-10 rounded-lg mb-4 w-10"
-            />
-            <h3 className="text-xl font-semibold mb-2">{site.site_name}</h3>
-            <a
-              href={site.site_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 hover:underline break-all"
-            >
-              {site.site_url}
-            </a>
-            <p className="text-gray-400 mt-2 text-sm">
-              Added: {new Date(site.created_at).toLocaleDateString()}
-            </p>
-            <button
-              className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition"
-              onClick={() => window.open(site.site_url)}
-            >
-              Visit
-            </button>
+            <div>
+              <img
+                src={site.site_image}
+                alt={site.site_name}
+                className="w-full h-15 rounded-lg mb-4"
+              />
+              <h3 className="text-xl font-semibold mb-2">{site.site_name}</h3>
+              <p className="text-gray-300 text-sm mb-2 line-clamp-3">
+                {site.site_description}
+              </p>
+              <a
+                href={site.site_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:underline break-all text-sm"
+              >
+                {site.site_url}
+              </a>
+            </div>
+            <div className="mt-4">
+              <p className="text-gray-400 text-xs mb-2">
+                Added: {new Date(site.created_at).toLocaleDateString()}
+              </p>
+              <div>
+                <button
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition"
+                  onClick={() => window.open(site.site_url)}
+                >
+                  Visit
+                </button>
+              </div>
+            </div>
           </div>
         ))}
       </div>
