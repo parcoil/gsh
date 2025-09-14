@@ -40,7 +40,7 @@ const Navbar = () => {
             <a href="/" className="flex items-center">
               <img src="/logo512.png" alt="Logo" width={40} />
               <span className="text-white text-xl font-bold ml-5">
-                GSH
+                GSH (Beta)
               </span>
             </a>
           </div>

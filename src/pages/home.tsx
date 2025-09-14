@@ -37,7 +37,7 @@ function Home() {
   return (
     <div className="m-4 flex flex-col items-center">
       <img src="/logo512.png" alt="" width={100} />
-      <h1 className="text-4xl font-bold mb-8 text-center">Game Sites Hub</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Game Sites Hub (Beta)</h1>
 
       <input
         type="text"
