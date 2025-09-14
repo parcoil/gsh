@@ -14,4 +14,5 @@ Bringing unblocked games/proxy sites together in one place
 
 - Discord button
 - Upvote system
+- Site Redesign 
 
