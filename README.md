@@ -10,3 +10,8 @@ Bringing unblocked games/proxy sites together in one place
 
 ### join our discord server [dsc.gg/parcoil](https://dsc.gg/parcoil)
 
+## Upcoming Features 
+
+- Discord button
+- Upvote system
+
