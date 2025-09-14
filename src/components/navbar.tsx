@@ -1,8 +1,9 @@
-'use client'
 import { useState, useEffect } from "react"
 import { supabase } from "../utils/supabase"
+import { getUrl } from "../utils/getUrl"
 
 const Navbar = () => {
+    const url = getUrl()
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
@@ -17,7 +18,11 @@ const Navbar = () => {
   }, [])
 
   async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({ provider: "google" })
+    await supabase.auth.signInWithOAuth({ provider: "google",      options: {
+        redirectTo: url,
+      } }
+
+    )
   }
 
   async function signOut() {
@@ -25,7 +30,7 @@ const Navbar = () => {
   }
 
   const userPfp =
-    user?.user_metadata?.avatar_url || "/default-avatar.png"
+    user?.user_metadata?.avatar_url || "https://parcoil.com/parcoil.png"
 
   return (
     <nav className="bg-gray-800 shadow-lg mb-8">
@@ -58,7 +63,6 @@ const Navbar = () => {
             >
               About
             </a> */}
-
             {user ? (
               <img
                 src={userPfp}
