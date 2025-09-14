@@ -4,5 +4,9 @@
 
 # Game Site Hub
 
-bringing unblocked games/proxy sites together in one place
+Bringing unblocked games/proxy sites together in one place
+
+## View at [hub.parcoil.com](https://hub.parcoil.com)
+
+### join our discord server [dsc.gg/parcoil](https://dsc.gg/parcoil)
 
