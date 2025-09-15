@@ -6,24 +6,26 @@ import Login from "./pages/login";
 import Submit from "./pages/submit";
 import Footer from "./components/footer";
 import Site from "./pages/site";
+import { ThemeProvider } from "@/components/theme-provider"
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="flex flex-col min-h-screen bg-gray-900 text-gray-100">
-        <Navbar />
-        <div className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/submit" element={<Submit />} />
-            <Route path="/site/:id" element={<Site />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <div className="min-h-screen bg-background text-foreground flex flex-col">
+          <Navbar />
+          <main className="flex-grow container mx-auto px-4 py-6">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/submit" element={<Submit />} />
+              <Route path="/site/:id" element={<Site />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
-

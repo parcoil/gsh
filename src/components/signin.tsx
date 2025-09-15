@@ -1,5 +1,6 @@
 import { supabase } from '../utils/supabase'
 import { getUrl } from '../utils/getUrl'
+import { Button } from "@/components/ui/button"
 
 export default function GoogleLogin() {
     const url = getUrl()
@@ -15,11 +16,12 @@ export default function GoogleLogin() {
   }
 
   return (
-    <button
-      className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-4 py-2 rounded transition-all hover:scale-105 active:scale-95"
+    <Button
+      variant="default"
+      className="transition-all hover:scale-105 active:scale-95"
       onClick={signInWithGoogle}
     >
       Sign in with Google
-    </button>
+    </Button>
   )
 }

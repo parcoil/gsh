@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react"
 import { supabase } from "../utils/supabase"
 import { getUrl } from "../utils/getUrl"
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+} from "@/components/ui/navigation-menu"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const Navbar = () => {
-    const url = getUrl()
+  const url = getUrl()
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
@@ -18,11 +26,12 @@ const Navbar = () => {
   }, [])
 
   async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({ provider: "google",      options: {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
         redirectTo: url,
-      } }
-
-    )
+      }
+    })
   }
 
   async function signOut() {
@@ -33,53 +42,43 @@ const Navbar = () => {
     user?.user_metadata?.avatar_url || "https://parcoil.com/parcoil.png"
 
   return (
-    <nav className="bg-gray-800 shadow-lg mb-8 top-0 z-10">
+    <nav className="border-b">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <a href="/" className="flex items-center">
               <img src="/logo512.png" alt="Logo" width={40} />
-              <span className="text-white text-xl font-bold ml-5">
-                GSH (Beta)
-              </span>
+              <span className="text-xl font-bold ml-5">GSH (Beta)</span>
             </a>
           </div>
-          <div className="hidden md:flex items-center space-x-4">
-            <a
-              href="/"
-              className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Sites
-            </a>
-            <a
-              href="/submit"
-              className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            >
-              Submit a site
-            </a>
-            {/* <a
-              href="/about"
-              className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-            >
-              About
-            </a> */}
-            {user ? (
-              <img
-                src={userPfp}
-                alt="Profile"
-                onClick={signOut}
-                title="Click to log out"
-                className="w-10 h-10 rounded-full cursor-pointer hover:ring-2 hover:ring-blue-500"
-              />
-            ) : (
-              <button
-                onClick={signInWithGoogle}
-                className="bg-blue-500 px-3 py-2 rounded-md text-sm font-medium text-white cursor-pointer hover:scale-105 active:scale-95 transition-all"
-              >
-                Log In
-              </button>
-            )}
-          </div>
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList className="flex items-center space-x-4">
+              <NavigationMenuItem>
+                <NavigationMenuLink className="text-sm" href="/">
+                  Sites
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink className="text-sm" href="/submit">
+                  Submit a site
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              {user ? (
+                <NavigationMenuItem>
+                  <Avatar onClick={signOut} className="cursor-pointer hover:ring-2 hover:ring-primary">
+                    <AvatarImage src={userPfp} alt="Profile picture" />
+                    <AvatarFallback>User</AvatarFallback>
+                  </Avatar>
+                </NavigationMenuItem>
+              ) : (
+                <NavigationMenuItem>
+                  <Button onClick={signInWithGoogle} size="sm">
+                    Log In
+                  </Button>
+                </NavigationMenuItem>
+              )}
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
       </div>
     </nav>
