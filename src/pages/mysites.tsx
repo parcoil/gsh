@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { User, Site } from "@/types/types";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 export default function MySites() {
   const [user, setUser] = useState<User | null>(null);
@@ -22,6 +28,7 @@ export default function MySites() {
   const [editingSite, setEditingSite] = useState<Site | null>(null);
   const [editLoading, setEditLoading] = useState(false);
   const [urlError, setUrlError] = useState("");
+  const router = useNavigate();
 
   useEffect(() => {
     async function fetchUserAndSites() {
@@ -33,7 +40,7 @@ export default function MySites() {
         return;
       }
 
-      const userData = {
+      const userData: User = {
         id: data.user.id,
         email: data.user.email || "",
         username: data.user.user_metadata?.username || "",
@@ -43,12 +50,22 @@ export default function MySites() {
 
       const { data: sitesData, error: sitesError } = await supabase
         .from("sites")
-        .select("id, created_at, site_name, site_url, site_image, site_description")
+        .select(
+          "id, created_at, site_name, site_url, site_image, site_description, approved"
+        )
         .eq("user_id", userData.id)
         .order("created_at", { ascending: false });
 
       if (sitesError) console.error("Error fetching sites:", sitesError);
-      if (sitesData) setSites(sitesData as Site[]);
+
+      if (sitesData) {
+        setSites(
+          sitesData.map((s) => ({
+            ...s,
+            approved: !!s.approved,
+          }))
+        );
+      }
 
       setLoading(false);
     }
@@ -72,7 +89,9 @@ export default function MySites() {
     if (!editingSite) return;
 
     if (!validateUrls(editingSite.site_url)) {
-      setUrlError("One or more URLs are invalid. Make sure each URL is on its own line and valid.");
+      setUrlError(
+        "One or more URLs are invalid. Make sure each URL is on its own line and valid."
+      );
       return;
     }
 
@@ -91,12 +110,15 @@ export default function MySites() {
 
     if (error) {
       console.error("Error updating site:", error);
+      toast.dismiss();
+      toast.error("Failed to update site.");
     } else {
       setSites((prev) =>
         prev.map((s) => (s.id === editingSite.id ? editingSite : s))
       );
       setEditingSite(null);
       setUrlError("");
+       toast.dismiss();
       toast.success("Site updated successfully!");
     }
 
@@ -128,7 +150,8 @@ export default function MySites() {
   }
 
   if (!user) {
-    return <p className="text-center text-muted-foreground">User not found.</p>;
+    router("/login");
+    return null;
   }
 
   return (
@@ -140,16 +163,21 @@ export default function MySites() {
 
       <h2 className="text-2xl font-semibold mt-6">My Sites</h2>
       {sites.length === 0 ? (
-        <p className="text-muted-foreground">You haven't added any sites yet.</p>
+        <p className="text-muted-foreground">
+          You haven't added any sites yet.
+        </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {sites.map((site) => (
-            <Card key={site.id} className="hover:scale-105 transition duration-300">
+            <Card
+              key={site.id}
+              className="hover:scale-105 transition duration-300"
+            >
               <CardHeader>
                 <img
                   src={`https://corsproxy.io/?url=${site.site_image}`}
                   alt={site.site_name}
-                  className="rounded-lg w-full h-20 mb-4"
+                  className="rounded-lg h-20 mb-4"
                 />
               </CardHeader>
               <CardContent className="space-y-2">
@@ -157,19 +185,39 @@ export default function MySites() {
                 <p className="text-sm text-muted-foreground line-clamp-3">
                   {site.site_description}
                 </p>
+                <p className="text-xs font-medium">
+                  Status:{" "}
+                  {site.approved ? (
+                    <span className="text-green-500">Approved</span>
+                  ) : (
+                    <span className="text-yellow-400">Pending Approval</span>
+                  )}
+                </p>
                 <p className="text-xs text-muted-foreground">
                   Added: {new Date(site.created_at).toLocaleDateString()}
                 </p>
               </CardContent>
               <CardFooter className="flex flex-col space-y-2">
-                <Button onClick={() => setEditingSite(site)} className="w-full">Edit</Button>
+                <Button
+                  onClick={() => site.approved && setEditingSite(site)}
+                  className="w-full"
+                  disabled={!site.approved}
+                >
+                  {site.approved ? "Edit" : "Pending"}
+                </Button>
               </CardFooter>
             </Card>
           ))}
         </div>
       )}
 
-      <Dialog open={!!editingSite} onOpenChange={() => { setEditingSite(null); setUrlError(""); }}>
+      <Dialog
+        open={!!editingSite}
+        onOpenChange={() => {
+          setEditingSite(null);
+          setUrlError("");
+        }}
+      >
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Edit Site</DialogTitle>
@@ -202,7 +250,10 @@ export default function MySites() {
               <Input
                 value={editingSite.site_description}
                 onChange={(e) =>
-                  setEditingSite({ ...editingSite, site_description: e.target.value })
+                  setEditingSite({
+                    ...editingSite,
+                    site_description: e.target.value,
+                  })
                 }
                 placeholder="Description"
               />
@@ -212,7 +263,13 @@ export default function MySites() {
             <Button onClick={handleSave} disabled={editLoading}>
               {editLoading ? "Saving..." : "Save"}
             </Button>
-            <Button variant="outline" onClick={() => { setEditingSite(null); setUrlError(""); }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditingSite(null);
+                setUrlError("");
+              }}
+            >
               Cancel
             </Button>
           </DialogFooter>

@@ -11,7 +11,12 @@ function Login() {
         <CardContent className="flex flex-col items-center space-y-4">
           <GoogleLogin />
           <p className="text-sm text-muted-foreground text-center">
-            You must login to submit a site
+            You must login to submit a site.
+
+   
+          </p>
+          <p className="text-sm text-muted-foreground text-center">
+            If you already submitted a site, you can login to edit it.
           </p>
         </CardContent>
       </Card>
