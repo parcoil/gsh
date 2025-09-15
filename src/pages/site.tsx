@@ -14,7 +14,7 @@ export default function SitePage() {
     async function getSite() {
       const { data, error } = await supabase
         .from("sites")
-        .select("id, created_at, site_name, site_url, site_image, site_description")
+        .select("id, created_at, site_name, site_url, site_image, site_description, discord_url")
         .eq("id", Number(id))
         .single();
 
@@ -34,13 +34,13 @@ export default function SitePage() {
       <div className="flex justify-center py-10 px-4">
         <Card className="max-w-xl w-full space-y-4 animate-pulse">
           <CardHeader>
-            <Skeleton className="h-10 w-3/4 rounded" /> {/* Title */}
+            <Skeleton className="h-10 w-3/4 rounded" />
           </CardHeader>
           <CardContent className="space-y-3">
-            <Skeleton className="h-64 w-full rounded-xl" /> {/* Image */}
+            <Skeleton className="h-64 w-full rounded-xl" />
             <Skeleton className="h-4 w-full rounded" />
             <Skeleton className="h-4 w-5/6 rounded" />
-            <Skeleton className="h-6 w-1/4 rounded mt-2" /> {/* Links header */}
+            <Skeleton className="h-6 w-1/4 rounded mt-2" />
             <Skeleton className="h-4 w-full rounded" />
             <Skeleton className="h-4 w-5/6 rounded" />
           </CardContent>
@@ -75,6 +75,20 @@ export default function SitePage() {
             loading="lazy"
           />
           <p className="text-muted-foreground">{site.site_description}</p>
+
+          {site.discord_url && (
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold">Discord</h2>
+              <a
+                href={site.discord_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-primary/80 underline"
+              >
+                Join Discord Server
+              </a>
+            </div>
+          )}
 
           {siteLinks.length > 0 && (
             <div className="space-y-2">
