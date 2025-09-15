@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
 import { useNavigate } from "react-router";
-import type {Site} from "../types/site";
-
+import type { Site } from "../types/types";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Home() {
   const [sites, setSites] = useState<Site[]>([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
   const router = useNavigate();
 
   useEffect(() => {
@@ -19,7 +23,8 @@ function Home() {
         .eq("approved", true);
 
       if (error) console.error(error);
-      if (sites && sites.length > 0) setSites(sites as Site[]);
+      if (sites) setSites(sites as Site[]);
+      setLoading(false);
     }
 
     getSites();
@@ -29,57 +34,82 @@ function Home() {
     site.site_name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const skeletonArray = Array.from({ length: 6 });
+
   return (
-    <div className="m-4 flex flex-col items-center max-w-7xl mx-auto">
-      <img src="/logo512.png" alt="" width={100}   height={100}/>
-      <h1 className="text-4xl font-bold mb-8 text-center">Game Sites Hub (Beta)</h1>
+    <div className="container mx-auto py-6 space-y-8">
+      <div className="flex flex-col items-center space-y-4">
+        <img src="/logo512.png" alt="" width={100} height={100} className="h-24 w-24" />
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">Game Sites Hub (Beta)</h1>
+      </div>
 
-      <input
-        type="text"
-        placeholder="Search for a game site"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full max-w-md px-4 py-2 text-gray-200 bg-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 placeholder-gray-500 mb-5"
-      />
+      <div className="flex justify-center">
+        <Input
+          type="text"
+          placeholder="Search for a game site"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="max-w-md"
+        />
+      </div>
 
-      {filteredSites.length === 0 && (
-        <p className="text-center text-gray-400">No sites available.</p>
+      {loading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {skeletonArray.map((_, idx) => (
+            <Card key={idx}>
+              <CardHeader>
+                <Skeleton className="h-40 w-full rounded-lg mb-4" />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Skeleton className="h-6 w-3/4 rounded" />
+                <Skeleton className="h-4 w-full rounded" />
+                <Skeleton className="h-4 w-5/6 rounded" />
+              </CardContent>
+              <CardFooter>
+                <Skeleton className="h-8 w-full rounded" />
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredSites.map((site) => (
-          <div
-            key={site.id}
-            className="bg-gray-800 p-6 rounded-xl shadow-lg hover:scale-105 transform transition duration-300 flex flex-col justify-between max-w-5xl"
-          >
-            <div>
-              <img
-                src={`https://corsproxy.io/?url=${site.site_image}`}
-                alt={site.site_name}
-                className="min-w-15 max-h-17 rounded-lg mb-4"
-              />
-              <h3 className="text-xl font-semibold mb-2">{site.site_name}</h3>
-              <p className="text-gray-300 text-sm mb-2 lg:line-clamp-3">
-                {site.site_description}
-              </p>
-            </div>
-            <div className="">
-              <p className="text-gray-400 text-xs mb-2">
-                Added: {new Date(site.created_at).toLocaleDateString()}
-              </p>
-              <div className="w-full flex justify-center text-center">
-                <a
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition"
+      {!loading && filteredSites.length === 0 && (
+        <p className="text-center text-muted-foreground">No sites available.</p>
+      )}
+
+      {!loading && filteredSites.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredSites.map((site) => (
+            <Card key={site.id} className="hover:scale-105 transition duration-300 h-full">
+              <CardHeader>
+                <img
+                  src={`https://corsproxy.io/?url=${site.site_image}`}
+                  alt={site.site_name}
+                  className="min-w-15 max-h-17 rounded-lg mb-4"
+                />
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <h3 className="font-semibold text-xl">{site.site_name}</h3>
+                <p className="text-sm text-muted-foreground line-clamp-3">
+                  {site.site_description}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Added: {new Date(site.created_at).toLocaleDateString()}
+                </p>
+              </CardContent>
+              <CardFooter className="mt-auto">
+                <Button 
+                  className="w-full" 
                   onClick={() => router(`/site/${site.id}`)}
-                  href={`/site/${site.id}`}
+                  asChild
                 >
-                  View
-                </a>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+                  <a href={`/site/${site.id}`}>View</a>
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

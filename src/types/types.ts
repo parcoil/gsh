@@ -5,4 +5,11 @@ export type Site = {
   site_url: string;
   site_image: string;
   site_description: string;
+  approved?: boolean;
+};
+
+export type User = {
+  id: string;
+  email: string;
+  username?: string;
 };

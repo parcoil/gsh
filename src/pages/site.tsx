@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router"; 
 import { supabase } from "../utils/supabase";
-import type { Site } from "../types/site";
+import type { Site } from "../types/types";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 export default function SitePage() {
   const { id } = useParams<{ id: string }>();
   const [site, setSite] = useState<Site | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getSite() {
@@ -20,17 +23,36 @@ export default function SitePage() {
       } else {
         setSite(data);
       }
+      setLoading(false);
     }
 
-    if (id) {
-      getSite();
-    }
+    if (id) getSite();
   }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-10 px-4">
+        <Card className="max-w-xl w-full space-y-4 animate-pulse">
+          <CardHeader>
+            <Skeleton className="h-10 w-3/4 rounded" /> {/* Title */}
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Skeleton className="h-64 w-full rounded-xl" /> {/* Image */}
+            <Skeleton className="h-4 w-full rounded" />
+            <Skeleton className="h-4 w-5/6 rounded" />
+            <Skeleton className="h-6 w-1/4 rounded mt-2" /> {/* Links header */}
+            <Skeleton className="h-4 w-full rounded" />
+            <Skeleton className="h-4 w-5/6 rounded" />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (!site) {
     return (
-      <div className="flex items-center justify-center h-screen text-gray-400">
-        Loading site...
+      <div className="flex items-center justify-center h-screen text-muted-foreground">
+        Site not found.
       </div>
     );
   }
@@ -41,35 +63,40 @@ export default function SitePage() {
 
   return (
     <div className="flex justify-center py-10 px-4">
-      <div className="bg-gray-800 text-white p-8 rounded-2xl shadow-xl max-w-xl w-full">
-        <h1 className="text-3xl font-bold mb-4">{site.site_name}</h1>
+      <Card className="max-w-xl w-full space-y-6">
+        <CardHeader>
+          <h1 className="text-3xl font-bold scroll-m-20">{site.site_name}</h1>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <img
+            src={`https://corsproxy.io/?url=${site.site_image}`}
+            alt={site.site_name}
+            className="rounded-xl mb-6 max-h-64 max-w-full  bg-muted"
+            loading="lazy"
+          />
+          <p className="text-muted-foreground">{site.site_description}</p>
 
-        <img
-          src={`https://corsproxy.io/?url=${site.site_image}`}
-          alt={site.site_name}
-          className="rounded-xl mb-6 max-h-64 max-w-full bg-gray-600 "
-        />
-
-        <p className="text-gray-300 mb-6">{site.site_description}</p>
-
-        <div>
-          <h2 className="text-xl font-semibold mb-3">Site Links</h2>
-          <ul className="space-y-2">
-            {siteLinks.map((url, i) => (
-              <li key={i}>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-300 underline"
-                >
-                  {url}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+          {siteLinks.length > 0 && (
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold">Site Links</h2>
+              <ul className="space-y-1">
+                {siteLinks.map((url, i) => (
+                  <li key={i}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:text-primary/80 underline"
+                    >
+                      {url}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
