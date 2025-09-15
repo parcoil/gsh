@@ -3,4 +3,11 @@
 
 @theme {
   --font-sans: "Poppins", sans-serif;
+  
+}
+* {
+
+  scrollbar-color: #444444 #222222;
+  scrollbar-width:thin
+
 }

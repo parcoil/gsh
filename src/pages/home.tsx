@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
+import { useNavigate } from "react-router";
+import type {Site} from "../types/site";
 
-type Site = {
-  id: number;
-  created_at: string;
-  site_name: string;
-  site_url: string;
-  site_image: string;
-  site_description: string;
-};
 
 function Home() {
   const [sites, setSites] = useState<Site[]>([]);
   const [search, setSearch] = useState("");
+  const router = useNavigate();
 
   useEffect(() => {
     async function getSites() {
@@ -35,8 +30,8 @@ function Home() {
   );
 
   return (
-    <div className="m-4 flex flex-col items-center">
-      <img src="/logo512.png" alt="" width={100} />
+    <div className="m-4 flex flex-col items-center max-w-7xl mx-auto">
+      <img src="/logo512.png" alt="" width={100}   height={100}/>
       <h1 className="text-4xl font-bold mb-8 text-center">Game Sites Hub (Beta)</h1>
 
       <input
@@ -59,34 +54,27 @@ function Home() {
           >
             <div>
               <img
-                src={site.site_image}
+                src={`https://corsproxy.io/?url=${site.site_image}`}
                 alt={site.site_name}
-                className="w-full h-15 rounded-lg mb-4"
+                className="min-w-15 max-h-17 rounded-lg mb-4"
               />
               <h3 className="text-xl font-semibold mb-2">{site.site_name}</h3>
-              <p className="text-gray-300 text-sm mb-2 line-clamp-3">
+              <p className="text-gray-300 text-sm mb-2 lg:line-clamp-3">
                 {site.site_description}
               </p>
-              <a
-                href={site.site_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:underline break-all text-sm"
-              >
-                {site.site_url}
-              </a>
             </div>
-            <div className="mt-4">
+            <div className="">
               <p className="text-gray-400 text-xs mb-2">
                 Added: {new Date(site.created_at).toLocaleDateString()}
               </p>
-              <div>
-                <button
+              <div className="w-full flex justify-center text-center">
+                <a
                   className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded transition"
-                  onClick={() => window.open(site.site_url)}
+                  onClick={() => router(`/site/${site.id}`)}
+                  href={`/site/${site.id}`}
                 >
-                  Visit
-                </button>
+                  View
+                </a>
               </div>
             </div>
           </div>
