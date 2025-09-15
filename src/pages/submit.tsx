@@ -159,7 +159,7 @@ function Submit() {
             <p>
               You can also request a site to be added in our discord server.{" "}
               <span className="text-primary">
-                If you would like to update a site create a ticket in our discord
+                If you would like to update a site and you are not the owner create a ticket in our discord
                 server
               </span>
             </p>

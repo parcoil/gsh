@@ -6,3 +6,9 @@ export type Site = {
   site_image: string;
   site_description: string;
 };
+
+export type User = {
+  id: string;
+  email: string;
+  username?: string;
+};
