@@ -10,7 +10,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <BrowserRouter>
         <div className="min-h-screen bg-background text-foreground flex flex-col">
           <Navbar />
