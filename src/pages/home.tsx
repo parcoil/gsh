@@ -80,7 +80,7 @@ function Home() {
       {!loading && filteredSites.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredSites.map((site) => (
-            <Card key={site.id} className="hover:scale-105 transition duration-300">
+            <Card key={site.id} className="hover:scale-105 transition duration-300 h-full">
               <CardHeader>
                 <img
                   src={`https://corsproxy.io/?url=${site.site_image}`}
@@ -97,7 +97,7 @@ function Home() {
                   Added: {new Date(site.created_at).toLocaleDateString()}
                 </p>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="mt-auto">
                 <Button 
                   className="w-full" 
                   onClick={() => router(`/site/${site.id}`)}
