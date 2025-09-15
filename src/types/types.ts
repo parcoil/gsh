@@ -6,6 +6,7 @@ export type Site = {
   site_image: string;
   site_description: string;
   approved?: boolean;
+  discord_url?: string;
 };
 
 export type User = {
