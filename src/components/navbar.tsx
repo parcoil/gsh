@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router";
 import { ModeToggle } from "@/components/mode-toggle";
+import { ExternalLinkIcon, Globe, Paperclip, Plus, ScrollText, User } from "lucide-react";
 
 const Navbar = () => {
   const url = getUrl();
@@ -65,14 +66,40 @@ const Navbar = () => {
               <NavigationMenuItem>
                 <Link to="/">
                   <NavigationMenuLink className="text-sm">
-                    Sites
+                <div className="flex items-center gap-2">
+                <Globe className="h-4 w-4" /> 
+                Sites
+                </div>
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link to="/submit">
                   <NavigationMenuLink className="text-sm">
-                    Submit a Site
+                <div className="flex items-center gap-2">
+                <Plus className="h-4 w-4" /> 
+                Submit a Site
+                </div>
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link to="/request">
+                  <NavigationMenuLink className="text-sm">
+                <div className="flex items-center gap-2">
+                <Paperclip className="h-4 w-4" /> 
+                Request a Site
+                </div>
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link to="/changelog">
+                  <NavigationMenuLink className="text-sm">
+                <div className="flex items-center gap-2">
+                <ScrollText className="h-4 w-4" /> 
+                Changelog
+                </div>
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -87,10 +114,18 @@ const Navbar = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
-                        <Link to="/mysites">My Sites</Link>
+                        <Link to="/mysites">
+                        <div className="flex items-center gap-2">
+                        <Globe className="h-4 w-4" /> 
+                        My Sites
+                        </div>
+                        </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={signOut}>
+                        <div className="flex items-center gap-2">
+                        <ExternalLinkIcon className="h-4 w-4" /> 
                         Log Out
+                        </div>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -98,7 +133,10 @@ const Navbar = () => {
               ) : (
                 <NavigationMenuItem>
                   <Button onClick={signInWithGoogle} size="sm">
-                    Log In
+                <div className="flex items-center gap-2">
+                <User className="h-4 w-4" /> 
+                Log In
+                </div>
                   </Button>
                 </NavigationMenuItem>
               )}

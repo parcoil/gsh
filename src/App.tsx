@@ -4,9 +4,11 @@ import Navbar from "@/components/navbar";
 import NotFound from "@/pages/notfound";
 import Login from "@/pages/login";
 import Submit from "@/pages/submit";
+import Request from "@/pages/request";
 import Footer from "@/components/footer";
 import Site from "@/pages/site";
 import MySites from "@/pages/mysites";
+import Changelog from "@/pages/changelog";
 import { Toaster } from "@/components/ui/sonner"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -20,7 +22,9 @@ export default function App() {
           <main className="flex-grow container mx-auto px-4 py-6">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/changelog" element={<Changelog />} />
               <Route path="/submit" element={<Submit />} />
+              <Route path="/request" element={<Request />} />
               <Route path="/site/:id" element={<Site />} />
               <Route path="/mysites" element={<MySites />} />
               <Route path="/login" element={<Login />} />

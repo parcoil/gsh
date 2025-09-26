@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 function Submit() {
   const navigate = useNavigate();
@@ -81,10 +81,10 @@ function Submit() {
 
   return (
     <div className="container mx-auto py-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Submit a Site</h1>
+      <p className="text-center text-muted-foreground mb-6">this page is for site owners to submit their sites. if you are not a site owner please use the <a href="/request" className="text-primary hover:text-primary/80 underline">request a site</a></p>
       <Card className="max-w-lg mx-auto">
-        <CardHeader>
-          <CardTitle>Submit a Site</CardTitle>
-        </CardHeader>
+   
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -135,7 +135,7 @@ function Submit() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="discordUrl">Discord URL</Label>
+              <Label htmlFor="discordUrl">Discord URL (Optional)</Label>
               <Input
                 id="discordUrl"
                 type="url"

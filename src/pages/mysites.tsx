@@ -51,7 +51,7 @@ export default function MySites() {
       const { data: sitesData, error: sitesError } = await supabase
         .from("sites")
         .select(
-          "id, created_at, site_name, site_url, site_image, site_description, approved"
+          "id, created_at, site_name, site_url, site_image, site_description, approved, discord_url"
         )
         .eq("user_id", userData.id)
         .order("created_at", { ascending: false });
@@ -74,7 +74,10 @@ export default function MySites() {
   }, []);
 
   const validateUrls = (urls: string) => {
-    const lines = urls.split("\n").map((line) => line.trim()).filter(Boolean);
+    const lines = urls
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
     for (const line of lines) {
       try {
         new URL(line);
@@ -105,6 +108,7 @@ export default function MySites() {
         site_url: editingSite.site_url,
         site_image: editingSite.site_image,
         site_description: editingSite.site_description,
+        discord_url: editingSite.discord_url,
       })
       .eq("id", editingSite.id);
 
@@ -118,7 +122,7 @@ export default function MySites() {
       );
       setEditingSite(null);
       setUrlError("");
-       toast.dismiss();
+      toast.dismiss();
       toast.success("Site updated successfully!");
     }
 
@@ -156,12 +160,14 @@ export default function MySites() {
 
   return (
     <div className="container mx-auto py-10 space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">My Profile</h1>
-        <p className="text-muted-foreground">Email: {user.email}</p>
+      <div className="space-y-2 justify-">
+        <h1 className="text-3xl font-bold">My Sites</h1>
+        <div className="flex justify-between items-center">
+          <div />
+          <Button onClick={() => router("/submit")}>Add New Site</Button>
+        </div>
       </div>
 
-      <h2 className="text-2xl font-semibold mt-6">My Sites</h2>
       {sites.length === 0 ? (
         <p className="text-muted-foreground">
           You haven't added any sites yet.
@@ -256,6 +262,16 @@ export default function MySites() {
                   })
                 }
                 placeholder="Description"
+              />
+              <Input
+                value={editingSite.discord_url || ""}
+                onChange={(e) =>
+                  setEditingSite({
+                    ...editingSite,
+                    discord_url: e.target.value,
+                  })
+                }
+                placeholder="Discord Server URL (optional)"
               />
             </div>
           )}
