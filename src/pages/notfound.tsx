@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 function NotFound() {
   return (
@@ -14,7 +15,7 @@ function NotFound() {
           The page you're looking for doesn't exist or has been moved.
         </p>
         <Button asChild>
-          <a href="/">Go Back Home</a>
+          <Link to="/">Go Back Home</Link>
         </Button>
       </div>
     </div>

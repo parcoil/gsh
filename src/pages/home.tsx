@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import type { Site } from "../types/types";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -126,7 +126,7 @@ function Home() {
                   onClick={() => router(`/site/${site.id}`)}
                   asChild
                 >
-                  <a href={`/site/${site.id}`}>View</a>
+                  <Link to={`/site/${site.id}`}>View</Link>
                 </Button>
               </CardFooter>
             </Card>

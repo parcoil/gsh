@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
+import { Link } from "react-router";
 
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMioxwxmCFrDF6rRampd_8OysAgXIsR2P8bvb2BbxqOjbYl_76_MFxr-6a2BQ4K7oE/exec';
 
@@ -179,7 +180,7 @@ export default function RequestPage() {
           </form>
           
           <p className="mt-4 text-center text-sm text-muted-foreground">
-            Are you a site owner? <a href="/submit" className="text-primary hover:underline">Submit your site directly</a>
+            Are you a site owner? <Link to="/submit" className="text-primary hover:underline">Submit your site directly</Link>
           </p>
         </CardContent>
       </Card>
