@@ -169,13 +169,24 @@ export default function SitePage() {
                       className={`h-5 w-5 ${hasVoted ? "fill-current" : ""}`}
                     />
                     <span>{site.votes || 0}</span>
-                    Upvote
+                    {hasVoted && "Voted"}
+                    {!hasVoted && "Upvote"}
                   </Button>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">{site.site_description}</p>
+              <img
+                src={`https://api.microlink.io/?url=${encodeURIComponent(
+                  siteLinks[0]
+                )}&screenshot=true&embed=screenshot.url&ttl=1d`}
+                alt=""
+                className="rounded-xl border-2 max-w-full mb-0"
+              />
+              <p className="text-xs text-muted-foreground/60 text-center mt-1">
+                Images update every day (Uses First Link Provided)
+              </p>
               {site.discord_url && (
                 <a
                   href={site.discord_url}
@@ -199,7 +210,7 @@ export default function SitePage() {
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-destructive hover:text-destructive/80 "
+                          className="text-destructive hover:text-destructive/80 hover:underline"
                         >
                           {url}
                         </a>

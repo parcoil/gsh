@@ -107,7 +107,7 @@ function Home() {
           {filteredSites.map((site) => (
             <Card
               key={site.id}
-              className={`hover:scale-105 transition duration-300 h-full ${
+              className={`hover:scale-105 transition duration-300 ${
                 filteredSites[0]?.id === site.id
                   ? "border-2 border-amber-400"
                   : filteredSites[1]?.id === site.id
@@ -126,7 +126,7 @@ function Home() {
                   }
                   alt={site.site_name}
                   title={site.site_name}
-                  className="min-w-15 max-h-17 rounded-lg mb-4"
+                  className="min-w-15 max-h-17 rounded-lg"
                   onError={(e) => {
                     const target = e.currentTarget;
                     if (
