@@ -3,7 +3,12 @@ import { supabase } from "../utils/supabase";
 import { Link, useNavigate } from "react-router";
 import type { Site } from "../types/types";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowUpIcon, Crown } from "lucide-react";
@@ -22,7 +27,7 @@ function Home() {
           "id, created_at, site_name, site_url, site_image, site_description, votes"
         )
         .eq("approved", true)
-        .order('votes', { ascending: false, nullsFirst: false });
+        .order("votes", { ascending: false, nullsFirst: false });
 
       if (error) console.error(error);
       if (sites) setSites(sites as Site[]);
@@ -41,17 +46,32 @@ function Home() {
   return (
     <div className="container mx-auto py-6 space-y-8">
       <div className="flex flex-col items-center space-y-4">
-        <img src="/logo512.png" alt="" width={100} height={100} className="h-24 w-24" />
-        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">Game Sites Hub (Beta)</h1>
-        <p className="text-muted-foreground">Find the best unblocked game sites on the internet!</p>
-        <p className="text-muted-foreground text-sm mb-1">Upvote sites you like and help others find the best sites!</p>
-        <p className="text-muted-foreground text-xs m-0 font-bold">Sites are ranked by votes</p>
+        <img
+          src="/logo512.png"
+          alt=""
+          width={100}
+          height={100}
+          className="h-24 w-24"
+        />
+        <h1 className="scroll-m-20 text-4xl font-bold tracking-tight">
+          Game Sites Hub
+        </h1>
+        <p className="text-muted-foreground">
+          Find the best unblocked game sites on the internet!
+        </p>
+        <p className="text-muted-foreground text-sm mb-1">
+          Upvote sites you like and help others find the best sites!
+        </p>
+        <p className="text-muted-foreground text-xs m-0 font-bold">
+          Sites are ranked by votes
+        </p>
       </div>
 
       <div className="flex justify-center">
         <Input
           type="text"
-          placeholder="Search for a game site"
+          placeholder="Search for game sites"
+          size="lg"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="max-w-md"
@@ -85,30 +105,59 @@ function Home() {
       {!loading && filteredSites.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 first:bg-red-300">
           {filteredSites.map((site) => (
-            <Card key={site.id} className={`hover:scale-105 transition duration-300 h-full ${
-              filteredSites[0]?.id === site.id ? 'border-2 border-amber-400' : 
-              filteredSites[1]?.id === site.id ? 'border-2 border-slate-400' :
-              filteredSites[2]?.id === site.id ? 'border-2 border-amber-700' : ''
-            }`}>
+            <Card
+              key={site.id}
+              className={`hover:scale-105 transition duration-300 h-full ${
+                filteredSites[0]?.id === site.id
+                  ? "border-2 border-amber-400"
+                  : filteredSites[1]?.id === site.id
+                  ? "border-2 border-slate-400"
+                  : filteredSites[2]?.id === site.id
+                  ? "border-2 border-amber-700"
+                  : ""
+              }`}
+            >
               <CardHeader>
                 <img
-                  src={`https://corsproxy.io/?url=${site.site_image}`}
+                  src={
+                    site.site_image
+                      ? `https://corsproxy.io/?url=${site.site_image}`
+                      : "/logo512.png"
+                  }
                   alt={site.site_name}
+                  title={site.site_name}
                   className="min-w-15 max-h-17 rounded-lg mb-4"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (
+                      target.src !==
+                      window.location.origin + "/logo512.png"
+                    ) {
+                      target.src = "/logo512.png";
+                      target.alt = "Placeholder Image";
+                    }
+                  }}
                 />
-
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex justify-between items-center">
                   <h3 className="font-semibold text-xl flex items-center gap-2">
                     {site.site_name}
-                    {filteredSites[0]?.id === site.id && <Crown className="h-5 w-5 text-amber-400 fill-amber-400" />}
-                    {filteredSites[1]?.id === site.id && <Crown className="h-5 w-5 text-slate-400" />}
-                    {filteredSites[2]?.id === site.id && <Crown className="h-5 w-5 text-amber-700" />}
+                    {filteredSites[0]?.id === site.id && (
+                      <Crown className="h-5 w-5 text-amber-400 fill-amber-400" />
+                    )}
+                    {filteredSites[1]?.id === site.id && (
+                      <Crown className="h-5 w-5 text-slate-400" />
+                    )}
+                    {filteredSites[2]?.id === site.id && (
+                      <Crown className="h-5 w-5 text-amber-700" />
+                    )}
                   </h3>
                   <div className="flex items-center space-x-1 text-muted-foreground">
                     <ArrowUpIcon className="h-4 w-4" />
-                    <span className="text-sm font-medium">{site.votes || 0}</span>
+                    <span className="text-sm font-medium">
+                      {site.votes || 0}
+                    </span>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground line-clamp-3">
@@ -121,8 +170,8 @@ function Home() {
                 </div>
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button 
-                  className="w-full" 
+                <Button
+                  className="w-full"
                   onClick={() => router(`/site/${site.id}`)}
                   asChild
                 >
@@ -133,7 +182,9 @@ function Home() {
           ))}
         </div>
       )}
-      <p className="text-center">Please Spread this site to other Site Owners!</p>
+      <p className="text-center text-muted-foreground text-sm">
+        Be sure to spread this site to other Site Owners!
+      </p>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import Footer from "@/components/footer";
 import Site from "@/pages/site";
 import MySites from "@/pages/mysites";
 import Changelog from "@/pages/changelog";
+import Admin from "@/pages/admin";
 import { Toaster } from "@/components/ui/sonner"
 
 import { ThemeProvider } from "@/components/theme-provider"
@@ -27,6 +28,7 @@ export default function App() {
               <Route path="/request" element={<Request />} />
               <Route path="/site/:id" element={<Site />} />
               <Route path="/mysites" element={<MySites />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -1,3 +1,5 @@
+import type { UserMetadata } from "@supabase/supabase-js";
+
 export type Site = {
   id: number;
   created_at: string;
@@ -12,6 +14,7 @@ export type Site = {
 
 export type User = {
   id: string;
-  email: string;
+  email?: string;
   username?: string;
+  user_metadata?: UserMetadata;
 };

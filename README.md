@@ -2,7 +2,6 @@
 <img src="public/logo512.png" width="50" height="50">
 
 
-
 # Game Site Hub
 
 Bringing unblocked games/proxy sites together in one place
@@ -17,7 +16,8 @@ Bringing unblocked games/proxy sites together in one place
 
 ## Upcoming Features 
 
-- Discord button
-- Upvote system
+### Request New Features!
+- ~~Discord button~~
+- ~~Upvote system~~
 - ~~Site Redesign~~
 

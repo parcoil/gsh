@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
 import { getUrl } from "../utils/getUrl";
+import { useAdmin } from "@/utils/useAdmin";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -17,21 +18,34 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router";
 import { ModeToggle } from "@/components/mode-toggle";
-import { ExternalLinkIcon, Globe, Paperclip, Plus, ScrollText, User } from "lucide-react";
+import {
+  ExternalLinkIcon,
+  Globe,
+  Paperclip,
+  Plus,
+  ScrollText,
+  User,
+  ShieldCheck,
+} from "lucide-react";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const Navbar = () => {
   const url = getUrl();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const { isAdmin } = useAdmin();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    supabase.auth.getUser().then(({ data }) => setUser(data.user ?? null));
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   async function signInWithGoogle() {
@@ -66,40 +80,40 @@ const Navbar = () => {
               <NavigationMenuItem>
                 <Link to="/">
                   <NavigationMenuLink className="text-sm">
-                <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4" /> 
-                Sites
-                </div>
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      Sites
+                    </div>
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link to="/submit">
                   <NavigationMenuLink className="text-sm">
-                <div className="flex items-center gap-2">
-                <Plus className="h-4 w-4" /> 
-                Submit a Site
-                </div>
+                    <div className="flex items-center gap-2">
+                      <Plus className="h-4 w-4" />
+                      Submit a Site
+                    </div>
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link to="/request">
                   <NavigationMenuLink className="text-sm">
-                <div className="flex items-center gap-2">
-                <Paperclip className="h-4 w-4" /> 
-                Request a Site
-                </div>
+                    <div className="flex items-center gap-2">
+                      <Paperclip className="h-4 w-4" />
+                      Request a Site
+                    </div>
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link to="/changelog">
                   <NavigationMenuLink className="text-sm">
-                <div className="flex items-center gap-2">
-                <ScrollText className="h-4 w-4" /> 
-                Changelog
-                </div>
+                    <div className="flex items-center gap-2">
+                      <ScrollText className="h-4 w-4" />
+                      Changelog
+                    </div>
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -115,16 +129,26 @@ const Navbar = () => {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
                         <Link to="/mysites">
-                        <div className="flex items-center gap-2">
-                        <Globe className="h-4 w-4" /> 
-                        My Sites
-                        </div>
+                          <div className="flex items-center gap-2">
+                            <Globe className="h-4 w-4" />
+                            My Sites
+                          </div>
                         </Link>
                       </DropdownMenuItem>
+                      {isAdmin && (
+                        <DropdownMenuItem asChild>
+                          <Link to="/admin">
+                            <div className="flex items-center gap-2">
+                              <ShieldCheck className="h-4 w-4" />
+                              Admin Panel
+                            </div>
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem onClick={signOut}>
                         <div className="flex items-center gap-2">
-                        <ExternalLinkIcon className="h-4 w-4" /> 
-                        Log Out
+                          <ExternalLinkIcon className="h-4 w-4" />
+                          Log Out
                         </div>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -133,14 +157,14 @@ const Navbar = () => {
               ) : (
                 <NavigationMenuItem>
                   <Button onClick={signInWithGoogle} size="sm">
-                <div className="flex items-center gap-2">
-                <User className="h-4 w-4" /> 
-                Log In
-                </div>
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Log In
+                    </div>
                   </Button>
                 </NavigationMenuItem>
               )}
-              <NavigationMenuItem >
+              <NavigationMenuItem>
                 <ModeToggle />
               </NavigationMenuItem>
             </NavigationMenuList>
