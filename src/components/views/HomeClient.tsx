@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../utils/supabase";
-import { Link, useNavigate } from "react-router";
-import type { Site } from "../types/types";
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import type { Site } from "@/types/types";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -10,38 +12,19 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowUpIcon, Crown } from "lucide-react";
 
-function Home() {
-  const [sites, setSites] = useState<Site[]>([]);
+interface HomeClientProps {
+  initialSites: Site[];
+}
+
+export default function HomeClient({ initialSites }: HomeClientProps) {
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-  const router = useNavigate();
+  const router = useRouter();
 
-  useEffect(() => {
-    async function getSites() {
-      const { data: sites, error } = await supabase
-        .from("sites")
-        .select(
-          "id, created_at, site_name, site_url, site_image, site_description, votes"
-        )
-        .eq("approved", true)
-        .order("votes", { ascending: false, nullsFirst: false });
-
-      if (error) console.error(error);
-      if (sites) setSites(sites as Site[]);
-      setLoading(false);
-    }
-
-    getSites();
-  }, []);
-
-  const filteredSites = sites.filter((site) =>
+  const filteredSites = initialSites.filter((site) =>
     site.site_name.toLowerCase().includes(search.toLowerCase())
   );
-
-  const skeletonArray = Array.from({ length: 6 });
 
   return (
     <div className="container mx-auto py-6 space-y-8">
@@ -71,48 +54,27 @@ function Home() {
         <Input
           type="text"
           placeholder="Search for game sites"
-          size="lg"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="max-w-md"
         />
       </div>
 
-      {loading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skeletonArray.map((_, idx) => (
-            <Card key={idx}>
-              <CardHeader>
-                <Skeleton className="h-40 w-full rounded-lg mb-4" />
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <Skeleton className="h-6 w-3/4 rounded" />
-                <Skeleton className="h-4 w-full rounded" />
-                <Skeleton className="h-4 w-5/6 rounded" />
-              </CardContent>
-              <CardFooter>
-                <Skeleton className="h-8 w-full rounded" />
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      {!loading && filteredSites.length === 0 && (
+      {filteredSites.length === 0 && (
         <p className="text-center text-muted-foreground">No sites available.</p>
       )}
 
-      {!loading && filteredSites.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 first:bg-red-300">
-          {filteredSites.map((site) => (
+      {filteredSites.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredSites.map((site, index) => (
             <Card
               key={site.id}
               className={`hover:scale-105 transition duration-300 ${
-                filteredSites[0]?.id === site.id
+                index === 0
                   ? "border-2 border-amber-400"
-                  : filteredSites[1]?.id === site.id
+                  : index === 1
                   ? "border-2 border-slate-400"
-                  : filteredSites[2]?.id === site.id
+                  : index === 2
                   ? "border-2 border-amber-700"
                   : ""
               }`}
@@ -143,13 +105,13 @@ function Home() {
                 <div className="flex justify-between items-center">
                   <h3 className="font-semibold text-xl flex items-center gap-2">
                     {site.site_name}
-                    {filteredSites[0]?.id === site.id && (
+                    {index === 0 && (
                       <Crown className="h-5 w-5 text-amber-400 fill-amber-400" />
                     )}
-                    {filteredSites[1]?.id === site.id && (
+                    {index === 1 && (
                       <Crown className="h-5 w-5 text-slate-400" />
                     )}
-                    {filteredSites[2]?.id === site.id && (
+                    {index === 2 && (
                       <Crown className="h-5 w-5 text-amber-700" />
                     )}
                   </h3>
@@ -170,12 +132,8 @@ function Home() {
                 </div>
               </CardContent>
               <CardFooter className="mt-auto">
-                <Button
-                  className="w-full"
-                  onClick={() => router(`/site/${site.id}`)}
-                  asChild
-                >
-                  <Link to={`/site/${site.id}`}>View</Link>
+                <Button className="w-full" asChild>
+                  <Link href={`/site/${site.id}`}>View</Link>
                 </Button>
               </CardFooter>
             </Card>
@@ -188,5 +146,3 @@ function Home() {
     </div>
   );
 }
-
-export default Home;
