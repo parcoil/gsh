@@ -12,12 +12,49 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowUpIcon, Crown } from "lucide-react";
+import { toast } from "sonner";
+import { voteWithClientIp } from "../utils/voting";
 
 function Home() {
   const [sites, setSites] = useState<Site[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [votingSites, setVotingSites] = useState<Record<string, boolean>>({});
   const router = useNavigate();
+
+  const hasVoted = (id: string) => {
+    if (!id) return false;
+    const localKey = `voted-${id}`;
+    return !!localStorage.getItem(localKey);
+  };
+
+  const handleVote = async (site: Site) => {
+    if (hasVoted(site.id.toString()) || votingSites[site.id]) return;
+
+    setVotingSites(prev => ({ ...prev, [site.id]: true }));
+
+    try {
+      const result = await voteWithClientIp(site.id.toString());
+
+      if (result.status === 'ok') {
+        // Update the UI to show the new vote count
+        const updatedSites = sites.map(s => 
+          s.id === site.id ? { ...s, votes: (s.votes || 0) + 1 } : s
+        );
+        setSites(updatedSites);
+        toast.success("Thanks for your vote!");
+      } else if (result.status === 'rate_limited') {
+        toast.error("You've voted too many times. Please try again later.");
+      } else if (result.status === 'local_cooldown') {
+        toast.info("You've already voted recently. Please wait before voting again.");
+      }
+    } catch (error) {
+      console.error("Error voting:", error);
+      toast.error("Failed to submit vote. Please try again.");
+    } finally {
+      setVotingSites(prev => ({ ...prev, [site.id]: false }));
+    }
+  };
 
   useEffect(() => {
     async function getSites() {
@@ -153,8 +190,18 @@ function Home() {
                       <Crown className="h-5 w-5 text-amber-700" />
                     )}
                   </h3>
-                  <div className="flex items-center space-x-1 text-muted-foreground">
-                    <ArrowUpIcon className="h-4 w-4" />
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleVote(site);
+                      }}
+                      disabled={hasVoted(site.id.toString()) || votingSites[site.id]}
+                      className={`p-1 rounded-full ${hasVoted(site.id.toString()) ? 'text-amber-500' : 'text-muted-foreground hover:text-amber-500'} transition-colors`}
+                      aria-label="Upvote this site"
+                    >
+                      <ArrowUpIcon className={`h-4 w-4 ${hasVoted(site.id.toString()) ? 'fill-current' : ''}`} />
+                    </button>
                     <span className="text-sm font-medium">
                       {site.votes || 0}
                     </span>

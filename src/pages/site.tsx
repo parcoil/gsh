@@ -7,54 +7,40 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowUpIcon, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { voteWithClientIp } from "../utils/voting";
 
 export default function SitePage() {
   const { id } = useParams<{ id: string }>();
   const [site, setSite] = useState<Site | null>(null);
   const [loading, setLoading] = useState(true);
-  const [hasVoted, setHasVoted] = useState(false);
   const [isVoting, setIsVoting] = useState(false);
   const router = useNavigate();
 
-  useEffect(() => {
-    if (!id) return;
-
-    const votedSites = JSON.parse(localStorage.getItem("votedSites") || "[]");
-    setHasVoted(votedSites.includes(Number(id)));
-  }, [id]);
+  const hasVoted = (id: string) => {
+    if (!id) return false;
+    const localKey = `voted-${id}`;
+    return !!localStorage.getItem(localKey);
+  };
 
   const handleVote = async () => {
-    if (!site || hasVoted || !id) return;
+    if (!site || !id) return;
 
     setIsVoting(true);
 
     try {
-      const { data: siteData, error: fetchError } = await supabase
-        .from("sites")
-        .select("votes")
-        .eq("id", Number(id))
-        .single();
+      const result = await voteWithClientIp(id);
 
-      if (fetchError) throw fetchError;
-
-      const currentVotes = siteData?.votes || 0;
-      const newVotes = currentVotes + 1;
-
-      const { error: updateError } = await supabase
-        .from("sites")
-        .update({ votes: newVotes })
-        .eq("id", Number(id));
-
-      if (updateError) throw updateError;
-
-      setSite({ ...site, votes: newVotes });
-
-      const votedSites = JSON.parse(localStorage.getItem("votedSites") || "[]");
-      const newVotedSites = [...votedSites, Number(id)];
-      localStorage.setItem("votedSites", JSON.stringify(newVotedSites));
-
-      setHasVoted(true);
-      toast.success("Thanks for your vote!");
+      if (result.status === 'ok') {
+        const newVotes = (site.votes || 0) + 1;
+        setSite({ ...site, votes: newVotes });
+        toast.success("Thanks for your vote!");
+      } else if (result.status === 'rate_limited') {
+        toast.error("You've voted too many times. Please try again later.");
+      } else if (result.status === 'local_cooldown') {
+        toast.info("You've already voted recently. Please wait before voting again.");
+      } else {
+        throw new Error(result.status);
+      }
     } catch (error) {
       console.error("Error voting:", error);
       toast.error("Failed to submit vote. Please try again.");
@@ -154,23 +140,19 @@ export default function SitePage() {
                 <h1 className="text-3xl font-bold scroll-m-20">
                   {site.site_name}
                 </h1>
-                <div
-                  className={
-                    "flex items-center space-x-2" +
-                    (hasVoted ? "cursor-not-allowed" : "cursor-pointer")
-                  }
-                >
+                <div className={
+                  `flex items-center space-x-2 ${hasVoted(site.id.toString()) ? 'cursor-not-allowed' : 'cursor-pointer'}`
+                }>
                   <Button
                     onClick={handleVote}
-                    disabled={hasVoted || isVoting}
+                    disabled={hasVoted(site.id.toString()) || isVoting}
                     aria-label="Vote for this site"
                   >
                     <ArrowUpIcon
-                      className={`h-5 w-5 ${hasVoted ? "fill-current" : ""}`}
+                      className={`h-5 w-5 ${hasVoted(site.id.toString()) ? "fill-current" : ""}`}
                     />
                     <span>{site.votes || 0}</span>
-                    {hasVoted && "Voted"}
-                    {!hasVoted && "Upvote"}
+                    {hasVoted(site.id.toString()) ? "Voted" : "Upvote"}
                   </Button>
                 </div>
               </div>

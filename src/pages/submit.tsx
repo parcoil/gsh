@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -82,7 +82,7 @@ function Submit() {
   return (
     <div className="container mx-auto py-6">
       <h1 className="text-3xl font-bold mb-6 text-center">Submit a Site</h1>
-      <p className="text-center text-muted-foreground mb-6">this page is for site owners to submit their sites. if you are not a site owner please use the <a href="/request" className="text-primary hover:text-primary/80 underline">request a site</a></p>
+      <p className="text-center text-muted-foreground mb-6">this page is for site owners to submit their sites. if you are not a site owner please use the <Link to="/request" className="text-primary hover:text-primary/80 underline">request a site</Link></p>
       <Card className="max-w-lg mx-auto">
    
         <CardContent>
