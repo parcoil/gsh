@@ -14,8 +14,47 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowUpIcon, Crown } from "lucide-react";
 import { toast } from "sonner";
 import { voteWithClientIp } from "../utils/voting";
+import { useHead } from "@unhead/react";
 
 function Home() {
+  useHead({
+    title: "Game Site Hub - Discover and Vote on Gaming Communities",
+    meta: [
+      {
+        name: "description",
+        content: "Discover the best gaming communities and websites. Vote for your favorite game sites and help others find amazing gaming destinations."
+      },
+      {
+        name: "keywords",
+        content: "gaming, communities, game sites, voting, discovery, gaming hub"
+      },
+      {
+        property: "og:title",
+        content: "Game Site Hub - Discover and Vote on Gaming Communities"
+      },
+      {
+        property: "og:description",
+        content: "Discover the best gaming communities and websites. Vote for your favorite game sites and help others find amazing gaming destinations."
+      },
+      {
+        property: "og:type",
+        content: "website"
+      },
+      {
+        name: "twitter:card",
+        content: "summary_large_image"
+      },
+      {
+        name: "twitter:title",
+        content: "Game Site Hub - Discover and Vote on Gaming Communities"
+      },
+      {
+        name: "twitter:description",
+        content: "Discover the best gaming communities and websites. Vote for your favorite game sites and help others find amazing gaming destinations."
+      }
+    ]
+  });
+
   const [sites, setSites] = useState<Site[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);

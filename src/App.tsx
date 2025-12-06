@@ -10,9 +10,10 @@ import Site from "@/pages/site";
 import MySites from "@/pages/mysites";
 import Changelog from "@/pages/changelog";
 import Admin from "@/pages/admin";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 import Tos from "@/pages/tos";
-import { ThemeProvider } from "@/components/theme-provider"
+import Privacy from "@/pages/privacy";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
               <Route path="/mysites" element={<MySites />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/tos" element={<Tos />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

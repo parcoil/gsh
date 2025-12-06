@@ -6,8 +6,23 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import { useHead } from "@unhead/react";
 
 function Submit() {
+  useHead({
+    title: "Submit a Game Site - Game Site Hub",
+    meta: [
+      {
+        name: "description",
+        content: "Submit your favorite gaming community or website to Game Site Hub. Share amazing gaming destinations with the community and get votes from fellow gamers."
+      },
+      {
+        name: "keywords",
+        content: "submit game site, gaming community, add website, gaming hub"
+      }
+    ]
+  });
+
   const navigate = useNavigate();
   const [siteName, setSiteName] = useState("");
   const [siteUrl, setSiteUrl] = useState("");

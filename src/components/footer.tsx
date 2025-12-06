@@ -12,9 +12,12 @@ function Footer() {
 
           <div className="flex flex-col md:flex-row items-center space-y-1 md:space-y-0 md:space-x-6 text-sm">
             <span>v{version}</span>
-            <Link to="/tos" className="hover:underline">
-              Terms of Service
-            </Link>
+             <Link to="/tos" className="hover:underline">
+               Terms of Service
+             </Link>
+             <Link to="/privacy" className="hover:underline">
+               Privacy Policy
+             </Link>
             <a href="https://dsc.gg/parcoil" className="hover:underline">
               Discord
             </a>

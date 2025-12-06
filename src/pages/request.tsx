@@ -6,10 +6,25 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Link } from "react-router";
+import { useHead } from "@unhead/react";
 
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMioxwxmCFrDF6rRampd_8OysAgXIsR2P8bvb2BbxqOjbYl_76_MFxr-6a2BQ4K7oE/exec';
 
 export default function RequestPage() {
+  useHead({
+    title: "Request a Game Site - Game Site Hub",
+    meta: [
+      {
+        name: "description",
+        content: "Request to add a gaming community or website to Game Site Hub. Let us know about amazing gaming destinations that should be included in our collection."
+      },
+      {
+        name: "keywords",
+        content: "request game site, gaming community, add website, gaming hub"
+      }
+    ]
+  });
+
   const [formData, setFormData] = useState({
     site_name: "",
     site_url: "",

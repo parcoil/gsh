@@ -1,5 +1,16 @@
 
+import { useHead } from "@unhead/react";
+
 function Tos() {
+  useHead({
+    title: "Terms of Service - Game Site Hub",
+    meta: [
+      {
+        name: "description",
+        content: "Read the Terms of Service for Game Site Hub. Understand the rules and guidelines for using our gaming community platform."
+      }
+    ]
+  });
   return (
    <div className="max-w-4xl mx-auto px-6 py-12">
   <h1 className="text-4xl font-bold mb-6">Terms of Service</h1>
